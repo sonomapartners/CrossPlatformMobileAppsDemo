@@ -1,0 +1,123 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+
+    <!--
+        Customize the content security policy in the meta tag below as needed. Add 'unsafe-inline' to default-src to enable inline JavaScript.
+        For details, see http://go.microsoft.com/fwlink/?LinkID=617521
+    -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *; connect-src https://*.salesforce.com">
+    <title>ToDoList</title>
+
+    <!-- ToDoList references -->
+    <link href="css/index.css" rel="stylesheet" />
+    <link href="assets/styles/salesforce-lightning-design-system-scoped.min.css" rel="stylesheet" />
+</head>
+<body class="slds">
+    <div style="display: none;" class="slds-card slds-m-around--small" data-bind="visible: isAuthenticated, css: {'slds-card--empty': tasks().length == 0}">
+        <header class="slds-card__header slds-grid">
+            <div class="slds-media slds-media--center slds-has-flexi-truncate">
+                <div class="slds-media__figure">
+                    <svg aria-hidden="true" class="slds-icon slds-icon-standard-task slds-icon--small">
+                        <use xlink:href="assets/icons/standard-sprite/svg/symbols.svg#task"></use>
+                    </svg>
+                </div>
+                <div class="slds-media__body">
+                    <h3 class="slds-text-heading--small slds-truncate">To Do List</h3>
+                </div>
+            </div>
+            <div class="slds-no-flex">
+                <button class="slds-button slds-button--neutral slds-button--small" data-bind="click: showNewTaskForm">New Task</button>
+            </div>
+        </header>
+        <section class="slds-card__body">
+            <h3 class="slds-text-heading--small slds-p-top--large slds-p-bottom--large" data-bind="visible: tasks().length == 0">No Open Tasks</h3>
+            <table class="slds-table slds-table--bordered slds-no-row-hover" data-bind="visible: tasks().length > 0">
+                <thead>
+                    <tr>
+                        <th class="slds-cell-shrink" scope="col">
+
+                        </th>
+                        <th class="slds-text-heading--label slds-size--1-of-2" scope="col">Subject</th>
+                        <th class="slds-text-heading--label slds-size--1-of-2" scope="col">Due Date</th>
+                    </tr>
+                </thead>
+                <tbody data-bind="foreach: tasks">
+                    <tr class="slds-hint-parent">
+                        <td class="slds-row-select">
+                            <label class="slds-checkbox" data-bind="attr: {'for': 'complete-task' + $index()}">
+                                <input type="checkbox" data-bind="click: $parent.completeTask, attr: {id: 'complete-task' + $index()}" />
+                                <span class="slds-checkbox--faux"></span>
+                                <span class="slds-form-element__label slds-assistive-text">complete task</span>
+                            </label>
+                        </td>
+                        <td class="slds-size--1-of-2 slds-truncate" data-label="Subject" data-bind="text: Subject"></td>
+                        <td class="slds-size--1-of-2 slds-truncate" data-label="Due Date" data-bind="text: ActivityDate"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+    </div>
+
+
+    <div data-bind="visible: isNewTaskFormVisible" style="display: none;">
+        <div aria-hidden="false" role="dialog" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <div class="slds-modal__header">
+                    <h2 class="slds-text-heading--medium">Create Task</h2>
+                    <button class="slds-button slds-modal__close" data-bind="click: cancelNewTask">
+                        <svg aria-hidden="true" class="slds-button__icon slds-button__icon--inverse slds-button__icon--large">
+                            <use xlink:href="assets/icons/action-sprite/svg/symbols.svg#close"></use>
+                        </svg>
+                        <span class="slds-assistive-text">Close</span>
+                    </button>
+                </div>
+                <div class="slds-modal__content">
+                    <div class="slds-form--stacked">
+                        <div class="slds-form-element">
+                            <label class="slds-form-element__label" for="subject">Subject</label>
+                            <div class="slds-form-element__control">
+                                <input id="subject" class="slds-input" type="text" data-bind="textInput: newTaskSubject" />
+                            </div>
+                        </div>
+
+                        <div class="slds-form-element">
+                            <label class="slds-form-element__label" for="dueDays">Due In</label>
+                            <div class="slds-form-element__control">
+                                <select id="dueDays" class="slds-select" data-bind="value: newTaskDueDays">
+                                    <option value="1">1 Day</option>
+                                    <option value="2">2 Days</option>
+                                    <option value="3">3 Days</option>
+                                    <option value="4">4 Days</option>
+                                    <option value="5">5 Days</option>
+                                    <option value="6">6 Days</option>
+                                    <option value="7">7 Days</option>
+                                    <option value="8">8 Days</option>
+                                    <option value="9">9 Days</option>
+                                    <option value="10">10 Days</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-modal__footer">
+                    <button class="slds-button slds-button--neutral" data-bind="click: cancelNewTask">Cancel</button>
+                    <button class="slds-button slds-button--neutral slds-button--brand" data-bind="click: saveNewTask">Save</button>
+                </div>
+            </div>
+        </div>
+        <div class="slds-modal-backdrop slds-modal-backdrop--open"></div>
+    </div>
+
+    <!-- Cordova reference, this is added to your app when it's built. -->
+    <script src="cordova.js"></script>
+    <script src="scripts/platformOverrides.js"></script>
+
+    <script src="scripts/index.js"></script>
+    <script src="scripts/jquery-1.11.3.min.js"></script>
+    <script src="scripts/knockout-3.3.0.js"></script>
+    <script src="scripts/ToDoList/Services.js"></script>
+    <script src="scripts/ToDoList/AppViewModel.js"></script>
+</body>
+</html>
